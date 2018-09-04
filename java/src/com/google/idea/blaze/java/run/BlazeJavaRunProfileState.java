@@ -141,9 +141,10 @@ final class BlazeJavaRunProfileState extends BlazeJavaDebuggableRunProfileState 
   /** Appends '--script_path' to blaze flags, then runs 'bash -c blaze build ... && run_script' */
   private static List<String> getBashCommandsToRunScript(BlazeCommand.Builder blazeCommand) {
     File scriptFile = createTempOutputFile();
-    blazeCommand.addBlazeFlags("--script_path=" + scriptFile.getPath());
+    blazeCommand.addBlazeFlags("--script_path=" + scriptFile.getPath().replaceAll("\\\\", "/").replaceAll("C:", "/c"));
     String blaze = ParametersListUtil.join(blazeCommand.build().toList());
-    return ImmutableList.of("/bin/bash", "-c", blaze + " && " + scriptFile.getPath());
+//    return ImmutableList.of("/bin/bash", "-c", blaze + " && " + scriptFile.getPath());
+    return ImmutableList.of("C:\\tools\\msys64\\usr\\bin\\bash.exe", "-c", blaze + " && " + scriptFile.getPath().replaceAll("\\\\", "/").replaceAll("C:", "/c"));
   }
 
   /** Creates a temporary output file to write the shell script to. */
